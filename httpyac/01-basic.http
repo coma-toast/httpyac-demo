@@ -1,0 +1,82 @@
+/*
+# Basic request
+
+Send a `GET` request to a url
+*/
+GET https://foobar.rest/httpstatus/200
+?test={{username}}
+&test2={{password}}
+/*
+# Validate Response
+
+Send a request and validate the response
+* HTTP Status code is `200`
+* Response body contains the string `success`
+* Response body has a key `statusCode` and it equals `200`
+*/
+###
+GET https://foobar.rest/httpstatus/200
+
+?? status == 200
+?? body message contains success
+?? body statusCode exists
+?? body statusCode equals 200
+/*
+# Fail Successfully
+
+Send a request that should fail and ensure it fails correctly
+* HTTP Status code is `403`
+* Response has an `error` key and it contains the string `Forbidden`
+* Response has a `statusCode` key and it equals `403`
+*/
+###
+GET https://foobar.rest/httpstatus/403
+
+?? status == 403
+?? body error exists
+?? body error equals Forbidden
+?? body statusCode equals 403
+/*
+# Path Parameter
+
+Send a request with a path parameter
+*/
+###
+@seconds=2
+GET https://foobar.rest/utils/sleep/{{seconds}}
+Content-Type: text/html
+
+?? status == 200
+?? body contains 2 seconds
+/*
+# Query Parameter
+
+Use `?` followed by `key=value`  
+_Can be on a new line_
+*/
+###
+GET https://foobar.rest/httpstatus/custom
+?statusCode=200
+&foo=bar
+/*
+# POST with payload
+
+Send a `POST` request with a JSON payload  
+* Payload is below the VERB and URL  
+* Asserts after payload for validation
+
+*/
+###
+POST https://foobar.rest/users
+?test=YWRtaW46SHVudGVyMg==
+Content-Type: application/json
+
+{
+    "firstName": "Joseph",
+    "lastName": "Schmoseph",
+    "email": "joe@schmo.com",
+    "title": "CEO",
+    "address": "123 fake st"
+}
+
+?? status == 201

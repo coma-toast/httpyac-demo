@@ -1,0 +1,6 @@
+/*
+# Basic request
+
+Send a `GET` request to a url
+*/
+GET https://foobar.rest/httpstatus/200

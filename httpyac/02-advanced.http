@@ -1,0 +1,86 @@
+/*
+# Advanced examples
+
+## Using ENV
+
+* If the `host` is set in your ENV, you can omit that from the request and just provide the endpoint
+*/
+GET /health
+
+?? status == 200
+/*
+# Metadata
+
+A line beginning with `# @<metadata type>` is HTTPYAC Metadata. Some common options are:
+
+|Type|Description|
+|---|---|
+|name|Name a request to reference in another request|
+|ref|Reference a named request (and runs the request if it has not be run at least once this session)|
+|forceRef|Reference a named request (and runs the request every time)|
+|title|Used for identifying a request in CLI or Test output|
+|import|Import from another `.http` file|
+|no-cookie-jar|Disable cookies for this request|
+
+## Example
+
+* Create a User
+* Get the user
+* Delete the user
+
+*/
+###
+# This will get all current users and delete the first one
+# we can reference this request in later requests by the name
+# @name allusers
+GET /users
+###
+
+# @disabled !allusers.length
+DELETE /users/{{allusers[0].id}}
+###
+# we can reference this request in later requests by the name
+# @name user
+POST /users
+
+{
+    "firstName": "Joseph",
+    "lastName": "Schmoseph",
+    "email": "joe@schmo.com",
+    "title": "CEO",
+    "address": "123 fake st"
+}
+
+?? status == 201
+###
+# @ref user
+GET /users/{{user[0].id}}
+###
+# @ref user
+DELETE /users/{{user[0].id}}
+/*
+# Pre-run and Post-run scripts
+
+Use `{{\n}}` above and/or below the `VERB /endpoint` for scripts. A *new line* is required, otherwise it will be interpreted as a variable.
+
+```
+{{
+    exports.foo = bar
+}}
+```
+
+GET /health/{{foo}}
+*/
+###
+{{
+    $global.foo = "bar";
+    exports.bar = "asfd";
+}}
+
+GET /health
+?foo={{$global.foo}}
+
+{{
+    console.log($global.foo)
+    console.log(bar)
+}}
