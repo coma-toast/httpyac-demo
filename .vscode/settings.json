@@ -1,0 +1,10 @@
+{
+    "editor.formatOnSave": true,
+    "httpyac.requestDefaultHeaders": {
+        "Content-Type": "application/json",
+        "Authorization": "Basic {{username}}:{{password}}"
+    },
+    "httpyac.environmentSelectedOnStart": ["DEV"],
+    "httpbook.saveWithOutputs": false,
+    "httpbook.outputAllResponses": true
+}
